@@ -79,8 +79,8 @@ def main():
     #exibe o schema do dataframe
     df.printSchema()
     
-    #exibe as 3 linhas do dataframe
-    df.show(3)
+    #exibe o dataframe
+    df.show()
 
     return None
 
