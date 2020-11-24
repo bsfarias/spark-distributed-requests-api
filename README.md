@@ -21,5 +21,9 @@ docker-compose up
    - Acesse o container e faça o submit do job spark:
 ```
 docker exec -i -t spark /bin/bash
-spark-submit --master local[*] /home/jovyan/scripts/parallel_requests.py --api_key <api_key> --start_date <start_date> --end_date <end_date>
+spark-submit --master local[*] \
+/home/jovyan/scripts/parallel_requests.py \
+--api_key <api_key> \
+--start_date <start_date> \
+--end_date <end_date>
 ```
