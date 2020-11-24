@@ -5,8 +5,9 @@ import requests
 from pyspark.sql import SparkSession
 from datetime import datetime  
 from datetime import timedelta
+from argparse import ArgumentParser
 
-def get_data_asteroid(params):
+def get_asteroid_data(params):
     """
     Retorna um payload com os dados de asteroides disponibilizados pela api da nasa
             Parametros:
@@ -29,8 +30,10 @@ def transform_data(spark_session, rdd):
             Retorno:
                     df (obj): DataFrame.
     """
-    spark_session.read.json(rdd).createOrReplaceTempView("tmp")
-    df = spark_session.sql("""SELECT element_count,near_earth_objects.* FROM tmp""")
+    df = spark_session \
+            .read \
+            .json(rdd) \
+            .select("element_count","near_earth_objects.*")
     return df
 
 def generate_request_params(api_key, start_date, end_date):
@@ -51,27 +54,25 @@ def generate_request_params(api_key, start_date, end_date):
 
 def main():
     """
-    Função principal.
-            Parametros:
-                    API_KEY (str)    : Chave utilizada nas requisições para a api
-                    START_DATE (str) : Data início (YYYY-MM-DD) a ser considerada na busca dos dados
-                    END_DATE (str)   : Data fim (YYYY-MM-DD) a ser considerada na busca dos dados
-            Retorno: None
+    Função principal
     """
-    API_KEY     = sys.argv[1]
-    START_DATE  = sys.argv[2]
-    END_DATE    = sys.argv[3]
-    
+    #arguments
+    parser = ArgumentParser()
+    parser.add_argument('--api_key', help='Chave utilizada nas requisições para a api', required=True)
+    parser.add_argument('--start_date', help='Data início (YYYY-MM-DD) a ser considerada na busca dos dados', required=True)
+    parser.add_argument('--end_date', help='Data fim (YYYY-MM-DD) a ser considerada na busca dos dados', required=True)
+    args = parser.parse_args()
+
     #sessão spark
     spark = SparkSession.builder.appName("extract_asteroids_data").getOrCreate()
     
     #parametros da requisicao
-    params = generate_request_params(API_KEY
-                                    ,datetime.strptime(START_DATE, '%Y-%m-%d')
-                                    ,datetime.strptime(END_DATE, '%Y-%m-%d'))
+    params = generate_request_params(args.api_key
+                                    ,datetime.strptime(args.start_date, '%Y-%m-%d')
+                                    ,datetime.strptime(args.end_date, '%Y-%m-%d'))
     #Requisições paralelas
     rdd = spark.sparkContext.parallelize(params) \
-          .map(lambda param: get_data_asteroid(params=param))
+          .map(lambda param: get_asteroid_data(params=param))
     
     #transforma o rdd em dataframe
     df = transform_data(spark, rdd)
