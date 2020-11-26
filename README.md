@@ -29,7 +29,7 @@ cd /home/jovyan/scripts/
 python3 -m unittest tests/test_distributed_requests.py
 
 ```
-   - Obs: substitua <SUA API KEY> pela sua real api_key (verificar Pré-requisitos).
+   - Obs: substitua `<SUA API KEY>` pela sua real api_key (verificar Pré-requisitos).
 
 ## Execução do job spark:
    - No do container, execute:
