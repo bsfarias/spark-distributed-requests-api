@@ -22,7 +22,7 @@ class PySparkTest(unittest.TestCase):
         self.spark.stop()
 
     def test_generate_request_params(self):
-      """ Testa a função generate_request_params
+      """ Testa o metodo generate_request_params
       """
       expected = [self.params]
       params =  generate_request_params(self.api_key
@@ -32,13 +32,13 @@ class PySparkTest(unittest.TestCase):
       self.assertEqual(expected, params)
 
     def test_get_asteroid_data(self):
-        """ Testa a função get_asteroid_data
+        """ Testa o metodo get_asteroid_data
         """
         data = json.loads(get_asteroid_data(self.params) )
         self.assertGreater(data['element_count'],0)
 
     def test_transform_data(self):
-        """ Testa a função transform_dat
+        """ Testa o metodo transform_data
         """
         expected = self.spark.createDataFrame(
                                 [(11,())],
