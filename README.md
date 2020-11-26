@@ -27,7 +27,6 @@ export API_KEY=<SUA API KEY>
 cd /home/jovyan/scripts/
 
 python3 -m unittest tests/test_distributed_requests.py
-
 ```
    - Obs: substitua `<SUA API KEY>` pela sua real api_key (verificar Pré-requisitos).
 
@@ -41,5 +40,4 @@ spark-submit --master local[*] \
 --api_key <api_key> \
 --start_date <start_date> \
 --end_date <end_date>
-
 ```
